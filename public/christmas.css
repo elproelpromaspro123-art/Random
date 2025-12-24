@@ -1,0 +1,370 @@
+/* CHRISTMAS THEME - Premium Festive Enhancement v2.2 */
+/* Elegant, professional, and subtle decorations */
+
+html[data-christmas="true"] {
+    --christmas-red: #c41e3a;
+    --christmas-green: #165b33;
+    --christmas-gold: #ffd700;
+    --christmas-light-gold: #ffeb3b;
+}
+
+/* ============================================
+   SUBTLE SNOWFALL EFFECT - STATIC
+   ============================================ */
+
+@keyframes gentle-float {
+    0%, 100% { transform: translateY(0) translateX(0); }
+    50% { transform: translateY(-2px) translateX(1px); }
+}
+
+/* Snowfall particles - SUBTLE & STATIC */
+html[data-christmas="true"]::before {
+    content: '❄';
+    position: fixed;
+    top: 15%;
+    left: 8%;
+    font-size: 20px;
+    color: rgba(100, 180, 255, 0.25);
+    pointer-events: none;
+    z-index: 9997;
+    animation: gentle-float 6s ease-in-out infinite;
+    text-shadow: 0 0 8px rgba(100, 180, 255, 0.3);
+}
+
+html[data-christmas="true"]::after {
+    content: '❄';
+    position: fixed;
+    top: 25%;
+    right: 12%;
+    font-size: 18px;
+    color: rgba(100, 180, 255, 0.2);
+    pointer-events: none;
+    z-index: 9997;
+    animation: gentle-float 8s ease-in-out infinite;
+    text-shadow: 0 0 6px rgba(100, 180, 255, 0.25);
+}
+
+html[data-christmas="true"] body::before {
+    content: '❄';
+    position: fixed;
+    top: 35%;
+    left: 85%;
+    font-size: 22px;
+    color: rgba(100, 180, 255, 0.22);
+    pointer-events: none;
+    z-index: 9997;
+    animation: gentle-float 7s ease-in-out infinite;
+    text-shadow: 0 0 7px rgba(100, 180, 255, 0.28);
+}
+
+html[data-christmas="true"] body::after {
+    content: '❄';
+    position: fixed;
+    top: 50%;
+    left: 5%;
+    font-size: 16px;
+    color: rgba(100, 180, 255, 0.23);
+    pointer-events: none;
+    z-index: 9997;
+    animation: gentle-float 9s ease-in-out infinite;
+    text-shadow: 0 0 6px rgba(100, 180, 255, 0.27);
+}
+
+/* ============================================
+   HEADER ENHANCEMENTS - FESTIVE
+   ============================================ */
+
+html[data-christmas="true"] .header {
+    position: relative;
+    background: linear-gradient(135deg, 
+        rgba(196, 30, 58, 0.18) 0%, 
+        rgba(22, 91, 51, 0.12) 50%,
+        rgba(255, 215, 0, 0.1) 100%) !important;
+    border-bottom: 2px solid rgba(255, 215, 0, 0.35) !important;
+    box-shadow: 0 8px 32px rgba(196, 30, 58, 0.15), 
+                0 0 30px rgba(255, 215, 0, 0.12),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
+}
+
+/* Decorative border animation */
+html[data-christmas="true"] .header::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg,
+        transparent 0%,
+        rgba(196, 30, 58, 0.3) 20%,
+        rgba(255, 215, 0, 0.25) 50%,
+        rgba(22, 91, 51, 0.3) 80%,
+        transparent 100%);
+    opacity: 1;
+}
+
+/* Christmas title styling - SUBTLE GLOW */
+html[data-christmas="true"] .header h1 {
+    color: var(--text-primary) !important;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.2), 0 0 5px rgba(196, 30, 58, 0.1) !important;
+}
+
+html[data-christmas="true"] .header h1:hover {
+    text-shadow: 0 0 15px rgba(255, 215, 0, 0.3), 0 0 8px rgba(196, 30, 58, 0.2) !important;
+}
+
+/* ============================================
+   CARD STYLING - NAVIDAD ENHANCEMENT
+   ============================================ */
+
+/* Pinned cards - GOLD ACCENT */
+html[data-christmas="true"] .pinned-card {
+    background: linear-gradient(135deg, 
+        rgba(196, 30, 58, 0.12) 0%, 
+        rgba(255, 215, 0, 0.08) 100%) !important;
+    border: 2px solid rgba(255, 215, 0, 0.4) !important;
+    box-shadow: 
+        0 8px 28px rgba(196, 30, 58, 0.15),
+        0 0 25px rgba(255, 215, 0, 0.18),
+        inset 0 0 20px rgba(255, 215, 0, 0.08) !important;
+    position: relative;
+}
+
+html[data-christmas="true"] .pinned-card:hover {
+    border-color: rgba(255, 215, 0, 0.6) !important;
+    box-shadow: 
+        0 10px 35px rgba(196, 30, 58, 0.22),
+        0 0 35px rgba(255, 215, 0, 0.28),
+        inset 0 0 25px rgba(255, 215, 0, 0.12) !important;
+    transform: translateY(-4px);
+}
+
+/* Admin cards - GOLD ROYAL */
+html[data-christmas="true"] .admin-card {
+    background: linear-gradient(135deg, 
+        rgba(255, 215, 0, 0.15) 0%, 
+        rgba(196, 30, 58, 0.08) 100%) !important;
+    border: 2px solid rgba(255, 215, 0, 0.45) !important;
+    box-shadow: 
+        0 8px 32px rgba(255, 215, 0, 0.22),
+        0 0 30px rgba(255, 215, 0, 0.2),
+        inset 0 0 25px rgba(255, 215, 0, 0.1) !important;
+    position: relative;
+}
+
+html[data-christmas="true"] .admin-card:hover {
+    border-color: var(--christmas-gold) !important;
+    box-shadow: 
+        0 12px 40px rgba(255, 215, 0, 0.3),
+        0 0 40px rgba(255, 215, 0, 0.35),
+        inset 0 0 35px rgba(255, 215, 0, 0.15) !important;
+    transform: translateY(-5px);
+}
+
+/* Regular secret cards - FESTIVE */
+html[data-christmas="true"] .secret-card {
+    background: linear-gradient(135deg, 
+        rgba(196, 30, 58, 0.08) 0%, 
+        rgba(22, 91, 51, 0.05) 100%) !important;
+    border: 1.5px solid rgba(255, 215, 0, 0.25) !important;
+    box-shadow: 
+        0 4px 18px rgba(196, 30, 58, 0.1),
+        0 0 15px rgba(255, 215, 0, 0.08) !important;
+    position: relative;
+}
+
+html[data-christmas="true"] .secret-card::before {
+    content: '✨';
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    font-size: 16px;
+    opacity: 0.3;
+    pointer-events: none;
+}
+
+html[data-christmas="true"] .secret-card:hover {
+    border-color: rgba(255, 215, 0, 0.4) !important;
+    box-shadow: 
+        0 8px 28px rgba(196, 30, 58, 0.16),
+        0 0 22px rgba(255, 215, 0, 0.15) !important;
+    transform: translateY(-4px);
+}
+
+/* ============================================
+   BUTTON ENHANCEMENTS
+   ============================================ */
+
+html[data-christmas="true"] .btn-post:hover,
+html[data-christmas="true"] .btn-action:hover {
+    box-shadow: 
+        0 6px 22px rgba(102, 126, 234, 0.18),
+        0 0 15px rgba(196, 30, 58, 0.1) !important;
+    border-color: rgba(255, 215, 0, 0.4) !important;
+}
+
+html[data-christmas="true"] .glow-green:hover {
+    box-shadow: 
+        0 6px 22px rgba(0, 255, 65, 0.18),
+        0 0 15px rgba(196, 30, 58, 0.1) !important;
+}
+
+html[data-christmas="true"] .btn-reaction {
+    border-color: rgba(255, 215, 0, 0.3) !important;
+    background: linear-gradient(135deg, rgba(196, 30, 58, 0.1), rgba(255, 215, 0, 0.06)) !important;
+}
+
+html[data-christmas="true"] .btn-reaction:hover {
+    box-shadow: 
+        0 4px 16px rgba(196, 30, 58, 0.15),
+        0 0 12px rgba(255, 215, 0, 0.12) !important;
+    border-color: rgba(255, 215, 0, 0.5) !important;
+    transform: scale(1.08);
+}
+
+html[data-christmas="true"] .btn-reaction.reacted {
+    border-color: var(--christmas-gold) !important;
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(196, 30, 58, 0.1)) !important;
+    box-shadow: 
+        0 0 20px rgba(255, 215, 0, 0.25),
+        0 0 10px rgba(196, 30, 58, 0.15) !important;
+}
+
+/* ============================================
+   MODAL STYLING
+   ============================================ */
+
+html[data-christmas="true"] .modal-content {
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.12) 0%, 
+        rgba(255, 255, 255, 0.08) 100%) !important;
+    border: 1.5px solid rgba(255, 215, 0, 0.28) !important;
+    box-shadow: 
+        0 22px 64px rgba(0, 0, 0, 0.35),
+        0 0 40px rgba(196, 30, 58, 0.12),
+        0 0 50px rgba(255, 215, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+}
+
+html[data-christmas="true"] .modal-content h2 {
+    color: var(--text-primary) !important;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.2) !important;
+}
+
+/* ============================================
+   REPLY CARDS
+   ============================================ */
+
+html[data-christmas="true"] .reply-card {
+    background: linear-gradient(135deg, 
+        rgba(196, 30, 58, 0.06) 0%, 
+        rgba(255, 215, 0, 0.03) 100%) !important;
+    border-left: 3px solid rgba(255, 215, 0, 0.35) !important;
+    box-shadow: 
+        0 2px 12px rgba(196, 30, 58, 0.08),
+        0 0 10px rgba(255, 215, 0, 0.06) !important;
+}
+
+html[data-christmas="true"] .reply-card:hover {
+    border-left-color: rgba(255, 215, 0, 0.55) !important;
+    box-shadow: 
+        0 6px 20px rgba(196, 30, 58, 0.14),
+        0 0 18px rgba(255, 215, 0, 0.12) !important;
+}
+
+/* ============================================
+   CATEGORY BADGES
+   ============================================ */
+
+html[data-christmas="true"] .category-badge {
+    border: 1.5px solid rgba(255, 215, 0, 0.35) !important;
+    background: linear-gradient(135deg, 
+        rgba(255, 215, 0, 0.12) 0%, 
+        rgba(196, 30, 58, 0.08) 100%) !important;
+    color: var(--christmas-gold) !important;
+    box-shadow: 0 3px 12px rgba(255, 215, 0, 0.15) !important;
+    transition: all 0.3s ease;
+}
+
+html[data-christmas="true"] .category-badge:hover {
+    border-color: rgba(255, 215, 0, 0.6) !important;
+    background: linear-gradient(135deg, 
+        rgba(255, 215, 0, 0.2) 0%, 
+        rgba(196, 30, 58, 0.15) 100%) !important;
+    box-shadow: 0 5px 18px rgba(255, 215, 0, 0.25) !important;
+    transform: translateY(-2px);
+}
+
+/* ============================================
+   RESPONSE COUNT BADGE
+   ============================================ */
+
+html[data-christmas="true"] .response-count {
+    background: linear-gradient(135deg, var(--christmas-red), var(--christmas-gold)) !important;
+    box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3) !important;
+    color: #000 !important;
+}
+
+/* ============================================
+   SCROLLBAR ENHANCEMENT
+   ============================================ */
+
+html[data-christmas="true"] ::-webkit-scrollbar-thumb {
+    background: linear-gradient(to bottom,
+        rgba(196, 30, 58, 0.35),
+        rgba(255, 215, 0, 0.28),
+        rgba(22, 91, 51, 0.35)) !important;
+}
+
+html[data-christmas="true"] ::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(to bottom,
+        rgba(196, 30, 58, 0.5),
+        rgba(255, 215, 0, 0.4),
+        rgba(22, 91, 51, 0.5)) !important;
+}
+
+/* ============================================
+   LIGHT THEME ADJUSTMENTS
+   ============================================ */
+
+:root[data-theme="light"][data-christmas="true"] .pinned-card {
+    background: linear-gradient(135deg, 
+        rgba(196, 30, 58, 0.1) 0%, 
+        rgba(255, 215, 0, 0.08) 100%) !important;
+}
+
+:root[data-theme="light"][data-christmas="true"] .admin-card {
+    background: linear-gradient(135deg, 
+        rgba(255, 215, 0, 0.1) 0%, 
+        rgba(196, 30, 58, 0.08) 100%) !important;
+}
+
+:root[data-theme="light"][data-christmas="true"] .secret-card {
+    background: linear-gradient(135deg, 
+        rgba(196, 30, 58, 0.06) 0%, 
+        rgba(22, 91, 51, 0.04) 100%) !important;
+}
+
+/* ============================================
+   SMOOTH TRANSITIONS
+   ============================================ */
+
+html[data-christmas="true"] .secret-card,
+html[data-christmas="true"] .pinned-card,
+html[data-christmas="true"] .admin-card,
+html[data-christmas="true"] .btn-post,
+html[data-christmas="true"] .btn-action,
+html[data-christmas="true"] .btn-reaction {
+    transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+}
+
+/* Version badge Christmas style - SUBTLE PULSE */
+html[data-christmas="true"] .version-badge {
+    background: linear-gradient(135deg, var(--christmas-gold) 0%, #ffa500 100%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.5) !important;
+    box-shadow: 0 4px 12px rgba(255, 215, 0, 0.25), 0 0 12px rgba(196, 30, 58, 0.15) !important;
+}
+
+html[data-christmas="true"] .version-badge:hover {
+    box-shadow: 0 6px 18px rgba(255, 215, 0, 0.35), 0 0 18px rgba(196, 30, 58, 0.22) !important;
+}
