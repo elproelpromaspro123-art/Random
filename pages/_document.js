@@ -12,13 +12,14 @@ export default function Document() {
         <meta property="og:description" content="Comparte tus secretos anónimamente - 100% privado, respuestas, 7 reacciones, trending, búsqueda avanzada y más" />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://cementerio-de-secretos-y-confesiones.vercel.app/" />
-        <meta property="og:image" content="https://cementerio-de-secretos-y-confesiones.vercel.app/og-image.svg" />
+        <meta property="og:image" content="https://cementerio-de-secretos-y-confesiones.vercel.app/api/og" />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
+        <meta property="og:image:type" content="image/png" />
         <meta property="twitter:card" content="summary_large_image" />
         <meta property="twitter:title" content="⚰️ Cementerio de Secretos v2.3" />
         <meta property="twitter:description" content="Comparte tus secretos anónimamente - 100% privado, respuestas, 7 reacciones y más" />
-        <meta property="twitter:image" content="https://cementerio-de-secretos-y-confesiones.vercel.app/og-image.svg" />
+        <meta property="twitter:image" content="https://cementerio-de-secretos-y-confesiones.vercel.app/api/og" />
         <script
           dangerouslySetInnerHTML={{
             __html: `
