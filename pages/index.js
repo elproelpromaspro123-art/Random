@@ -482,43 +482,50 @@ function HomeContent() {
     };
 
     const handlePostSecret = async () => {
-        if (!newSecretContent.trim()) return;
+         if (!newSecretContent.trim()) return;
 
-        // Validar cooldown
-        if (lastSecretTime && secretCooldownRemaining > 0) {
-            alert(`⏱️ Espera ${secretCooldownRemaining}s antes de crear otro secreto`);
-            console.log(`⏱️ Cooldown activo: ${secretCooldownRemaining}s restantes`);
-            return;
-        }
+         // Validar cooldown
+         if (lastSecretTime && secretCooldownRemaining > 0) {
+             alert(`⏱️ Espera ${secretCooldownRemaining}s antes de crear otro secreto`);
+             console.log(`⏱️ Cooldown activo: ${secretCooldownRemaining}s restantes`);
+             return;
+         }
 
-        // Limpiar UI de una
-        setNewSecretContent('');
-        setNewSecretCategory('general');
-        setNewSecretGender('');
-        setNewSecretAge('');
-        setNewSecretCountry('');
-        setShowNewSecret(false);
+         // Guardar valores ANTES de limpiar UI
+         const secretContent = newSecretContent;
+         const secretCategory = newSecretCategory;
+         const secretGender = newSecretGender || null;
+         const secretAge = newSecretAge ? parseInt(newSecretAge) : null;
+         const secretCountry = newSecretCountry || null;
 
-        // Activar cooldown
-        const now = Date.now();
-        setLastSecretTime(now);
-        setSecretCooldownRemaining(Math.ceil(SECRET_COOLDOWN / 1000));
-        console.log('⚡ Secreto creado, cooldown activado: 2 minutos');
+         // Limpiar UI de una
+         setNewSecretContent('');
+         setNewSecretCategory('general');
+         setNewSecretGender('');
+         setNewSecretAge('');
+         setNewSecretCountry('');
+         setShowNewSecret(false);
 
-        // Guardar en localStorage para persistencia
-        localStorage.setItem('lastSecretTime', now.toString());
+         // Activar cooldown
+         const now = Date.now();
+         setLastSecretTime(now);
+         setSecretCooldownRemaining(Math.ceil(SECRET_COOLDOWN / 1000));
+         console.log('⚡ Secreto creado, cooldown activado: 2 minutos');
 
-        // Enviar al servidor en background
-        const headers = { 'Content-Type': 'application/json' };
-        if (token) headers['Authorization'] = `Bearer ${token}`;
+         // Guardar en localStorage para persistencia
+         localStorage.setItem('lastSecretTime', now.toString());
 
-        const body = {
-            content: newSecretContent,
-            category: newSecretCategory,
-            gender: newSecretGender || null,
-            age: newSecretAge ? parseInt(newSecretAge) : null,
-            country: newSecretCountry || null
-        };
+         // Enviar al servidor en background
+         const headers = { 'Content-Type': 'application/json' };
+         if (token) headers['Authorization'] = `Bearer ${token}`;
+
+         const body = {
+             content: secretContent,
+             category: secretCategory,
+             gender: secretGender,
+             age: secretAge,
+             country: secretCountry
+         };
 
         fetch('/api/secrets', {
             method: 'POST',
@@ -838,7 +845,7 @@ function HomeContent() {
        
        const newSecrets = previousSecrets.map((secret) => {
            if (secret.id === secretId) {
-               const currentCount = secret[countKey] || 0;
+               const currentCount = parseInt(secret[countKey]) || 0;
                const newCount = wasReacted ? Math.max(currentCount - 1, 0) : currentCount + 1;
                return { 
                    ...secret, 
