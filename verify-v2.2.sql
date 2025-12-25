@@ -4,7 +4,7 @@
 -- Run this AFTER the migration to verify everything is correct
 
 \echo '======================================'
-\echo 'Cementerio de Secretos v2.2 Verification'
+\echo 'Cementerio de Secretos v2.3 Verification'
 \echo '======================================'
 \echo ''
 

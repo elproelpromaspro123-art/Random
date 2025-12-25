@@ -4,9 +4,9 @@ export default function Document() {
   return (
     <Html lang="es">
       <Head>
-        <title>Cementerio de Secretos v2.2 - Navidad 2025</title>
+        <title>Cementerio de Secretos v2.3 - Navidad 2025</title>
         <meta charSet="utf-8" />
-        <meta name="description" content="Cementerio de Secretos v2.2 - Seguridad, Optimización y Decoraciones Navideñas" />
+        <meta name="description" content="Cementerio de Secretos v2.3 - UI/UX Móvil Optimizada y Navidad Mejorada" />
         <meta name="theme-color" content="#000000" />
         <script
           dangerouslySetInnerHTML={{
