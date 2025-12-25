@@ -1061,7 +1061,7 @@ function HomeContent() {
 
             <div className="container">
                 <header className="header">
-                    <h1 onClick={() => router.push('/')}>⚰️ Cementerio de Secretos <span className="version-badge">v2.2</span></h1>
+                    <h1 onClick={() => router.push('/')}>⚰️ Cementerio de Secretos <span className="version-badge">v2.3</span></h1>
                     <div className="header-actions">
                         <div
                             className="notification-icon"
@@ -1240,7 +1240,7 @@ function HomeContent() {
                         }}>
                             <div>
                                 <div style={{ color: '#ff00ff', fontWeight: 'bold', marginBottom: '5px' }}>
-                                    ✨ v2.2 Actualizada - Más rápida y segura
+                                    ✨ v2.3 Actualizada - Móvil y Navidad Mejorados
                                 </div>
                                 <div style={{ fontSize: '12px', color: '#888888' }}>
                                     Borradores automáticos, búsqueda optimizada y reacciones mejoradas
@@ -1705,7 +1705,7 @@ function HomeContent() {
                                         )}
                                     </div>
 
-                                    {replyingTo === secret.id && (
+                                    {(replyingTo === secret.id || (repliesVisible[secret.id] && repliesVisible[secret.id].some(r => r.id === replyingTo))) && (
                                         <div className="modal-form" style={{ marginTop: '15px' }}>
                                             <textarea
                                                 value={replyContent}
@@ -1830,7 +1830,7 @@ function HomeContent() {
                                 </ul>
                             </div>
                             <div style={{ borderLeft: '3px solid #ff6b00', paddingLeft: '12px' }}>
-                                <h3 style={{ color: '#ff6b00', fontSize: '14px', marginBottom: '5px' }}>🔧 Optimización y Seguridad en v2.2</h3>
+                                <h3 style={{ color: '#ff6b00', fontSize: '14px', marginBottom: '5px' }}>🔧 Optimización y Seguridad en v2.3</h3>
                                 <ul style={{ fontSize: '13px', color: '#ff6b00', listStyle: 'none' }}>
                                     <li>🔒 Seguridad: Protección contra inyección SQL</li>
                                     <li>⚡ Performance: Búsqueda 50x más rápida con queries optimizadas</li>
