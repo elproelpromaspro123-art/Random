@@ -1,106 +1,123 @@
-/* CHRISTMAS THEME - Premium Festive Enhancement v2.2 */
-/* Elegant, professional, and subtle decorations */
+/* CHRISTMAS THEME - Premium Festive Enhancement v2.3 */
+/* Enhanced for Mobile - Beautiful festive decorations */
 
 html[data-christmas="true"] {
-    --christmas-red: #c41e3a;
-    --christmas-green: #165b33;
+    --christmas-red: #dc143c;
+    --christmas-green: #0b6623;
     --christmas-gold: #ffd700;
-    --christmas-light-gold: #ffeb3b;
+    --christmas-light-gold: #ffed4e;
+    --christmas-silver: #e8e8e8;
 }
 
 /* ============================================
-   SUBTLE SNOWFALL EFFECT - STATIC
+   SNOWFALL EFFECT - ANIMATED & DYNAMIC
    ============================================ */
 
 @keyframes gentle-float {
-    0%, 100% { transform: translateY(0) translateX(0); }
-    50% { transform: translateY(-2px) translateX(1px); }
+    0%, 100% { transform: translateY(0) translateX(0) rotate(0deg); }
+    50% { transform: translateY(-3px) translateX(2px) rotate(10deg); }
 }
 
-/* Snowfall particles - SUBTLE & STATIC */
+@keyframes sparkle {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; }
+}
+
+/* Snowfall particles - ENHANCED */
 html[data-christmas="true"]::before {
     content: '❄';
     position: fixed;
-    top: 15%;
+    top: 8%;
     left: 8%;
-    font-size: 20px;
-    color: rgba(100, 180, 255, 0.25);
+    font-size: 24px;
+    color: rgba(173, 216, 230, 0.45);
     pointer-events: none;
     z-index: 9997;
-    animation: gentle-float 6s ease-in-out infinite;
-    text-shadow: 0 0 8px rgba(100, 180, 255, 0.3);
+    animation: gentle-float 7s ease-in-out infinite, sparkle 3s ease-in-out infinite;
+    text-shadow: 0 0 12px rgba(135, 206, 250, 0.5), 0 0 25px rgba(100, 180, 255, 0.3);
 }
 
 html[data-christmas="true"]::after {
     content: '❄';
     position: fixed;
-    top: 25%;
-    right: 12%;
-    font-size: 18px;
-    color: rgba(100, 180, 255, 0.2);
+    top: 20%;
+    right: 10%;
+    font-size: 20px;
+    color: rgba(173, 216, 230, 0.4);
     pointer-events: none;
     z-index: 9997;
-    animation: gentle-float 8s ease-in-out infinite;
-    text-shadow: 0 0 6px rgba(100, 180, 255, 0.25);
+    animation: gentle-float 8s ease-in-out infinite, sparkle 4s ease-in-out infinite;
+    text-shadow: 0 0 10px rgba(135, 206, 250, 0.45), 0 0 20px rgba(100, 180, 255, 0.25);
 }
 
 html[data-christmas="true"] body::before {
     content: '❄';
     position: fixed;
-    top: 35%;
-    left: 85%;
+    top: 40%;
+    right: 8%;
     font-size: 22px;
-    color: rgba(100, 180, 255, 0.22);
+    color: rgba(173, 216, 230, 0.42);
     pointer-events: none;
     z-index: 9997;
-    animation: gentle-float 7s ease-in-out infinite;
-    text-shadow: 0 0 7px rgba(100, 180, 255, 0.28);
+    animation: gentle-float 9s ease-in-out infinite, sparkle 3.5s ease-in-out infinite;
+    text-shadow: 0 0 11px rgba(135, 206, 250, 0.48), 0 0 22px rgba(100, 180, 255, 0.28);
 }
 
 html[data-christmas="true"] body::after {
     content: '❄';
     position: fixed;
-    top: 50%;
+    top: 60%;
     left: 5%;
-    font-size: 16px;
-    color: rgba(100, 180, 255, 0.23);
+    font-size: 18px;
+    color: rgba(173, 216, 230, 0.38);
     pointer-events: none;
     z-index: 9997;
-    animation: gentle-float 9s ease-in-out infinite;
-    text-shadow: 0 0 6px rgba(100, 180, 255, 0.27);
+    animation: gentle-float 10s ease-in-out infinite, sparkle 2.5s ease-in-out infinite;
+    text-shadow: 0 0 9px rgba(135, 206, 250, 0.42), 0 0 18px rgba(100, 180, 255, 0.22);
+}
+
+@media (max-width: 768px) {
+    html[data-christmas="true"]::before,
+    html[data-christmas="true"]::after,
+    html[data-christmas="true"] body::before,
+    html[data-christmas="true"] body::after {
+        font-size: 18px;
+    }
 }
 
 /* ============================================
    HEADER ENHANCEMENTS - FESTIVE
    ============================================ */
 
+@keyframes header-glow {
+    0%, 100% { box-shadow: 0 8px 32px rgba(220, 20, 60, 0.18), 0 0 30px rgba(255, 215, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.05); }
+    50% { box-shadow: 0 10px 40px rgba(220, 20, 60, 0.25), 0 0 40px rgba(255, 215, 0, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.08); }
+}
+
 html[data-christmas="true"] .header {
     position: relative;
     background: linear-gradient(135deg, 
-        rgba(196, 30, 58, 0.18) 0%, 
-        rgba(22, 91, 51, 0.12) 50%,
-        rgba(255, 215, 0, 0.1) 100%) !important;
-    border-bottom: 2px solid rgba(255, 215, 0, 0.35) !important;
-    box-shadow: 0 8px 32px rgba(196, 30, 58, 0.15), 
-                0 0 30px rgba(255, 215, 0, 0.12),
-                inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
+        rgba(220, 20, 60, 0.2) 0%, 
+        rgba(11, 102, 35, 0.15) 50%,
+        rgba(255, 215, 0, 0.12) 100%) !important;
+    border-bottom: 2.5px solid rgba(255, 215, 0, 0.45) !important;
+    animation: header-glow 4s ease-in-out infinite;
 }
 
 /* Decorative border animation */
+@keyframes border-glow {
+    0%, 100% { background: linear-gradient(90deg, transparent 0%, rgba(220, 20, 60, 0.35) 20%, rgba(255, 215, 0, 0.3) 50%, rgba(11, 102, 35, 0.35) 80%, transparent 100%); }
+    50% { background: linear-gradient(90deg, transparent 0%, rgba(220, 20, 60, 0.5) 20%, rgba(255, 215, 0, 0.45) 50%, rgba(11, 102, 35, 0.5) 80%, transparent 100%); }
+}
+
 html[data-christmas="true"] .header::after {
     content: '';
     position: absolute;
     bottom: 0;
     left: 0;
     right: 0;
-    height: 2px;
-    background: linear-gradient(90deg,
-        transparent 0%,
-        rgba(196, 30, 58, 0.3) 20%,
-        rgba(255, 215, 0, 0.25) 50%,
-        rgba(22, 91, 51, 0.3) 80%,
-        transparent 100%);
-    opacity: 1;
+    height: 2.5px;
+    animation: border-glow 3s ease-in-out infinite;
 }
 
 /* Christmas title styling - SUBTLE GLOW */
@@ -162,14 +179,17 @@ html[data-christmas="true"] .admin-card:hover {
 }
 
 /* Regular secret cards - FESTIVE */
+@keyframes card-glow {
+    0%, 100% { box-shadow: 0 4px 18px rgba(220, 20, 60, 0.12), 0 0 15px rgba(255, 215, 0, 0.1); }
+    50% { box-shadow: 0 6px 25px rgba(220, 20, 60, 0.18), 0 0 20px rgba(255, 215, 0, 0.16); }
+}
+
 html[data-christmas="true"] .secret-card {
     background: linear-gradient(135deg, 
-        rgba(196, 30, 58, 0.08) 0%, 
-        rgba(22, 91, 51, 0.05) 100%) !important;
-    border: 1.5px solid rgba(255, 215, 0, 0.25) !important;
-    box-shadow: 
-        0 4px 18px rgba(196, 30, 58, 0.1),
-        0 0 15px rgba(255, 215, 0, 0.08) !important;
+        rgba(220, 20, 60, 0.1) 0%, 
+        rgba(11, 102, 35, 0.08) 100%) !important;
+    border: 1.5px solid rgba(255, 215, 0, 0.35) !important;
+    animation: card-glow 4s ease-in-out infinite;
     position: relative;
 }
 
@@ -178,17 +198,18 @@ html[data-christmas="true"] .secret-card::before {
     position: absolute;
     top: 12px;
     right: 16px;
-    font-size: 16px;
-    opacity: 0.3;
+    font-size: 18px;
+    animation: sparkle 2s ease-in-out infinite;
     pointer-events: none;
 }
 
 html[data-christmas="true"] .secret-card:hover {
-    border-color: rgba(255, 215, 0, 0.4) !important;
+    border-color: rgba(255, 215, 0, 0.6) !important;
     box-shadow: 
-        0 8px 28px rgba(196, 30, 58, 0.16),
-        0 0 22px rgba(255, 215, 0, 0.15) !important;
-    transform: translateY(-4px);
+        0 10px 35px rgba(220, 20, 60, 0.22),
+        0 0 28px rgba(255, 215, 0, 0.25) !important;
+    transform: translateY(-5px);
+    animation: none;
 }
 
 /* ============================================

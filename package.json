@@ -1,7 +1,7 @@
 {
     "name": "cementerio-secretos-pro",
-    "version": "2.2.0",
-    "description": "Cementerio de Secretos v2.2 - Optimización y Seguridad",
+    "version": "2.3.0",
+    "description": "Cementerio de Secretos v2.3 - UI/UX Móvil Optimizada y Navidad Mejorada",
     "scripts": {
         "dev": "next dev",
         "build": "next build",

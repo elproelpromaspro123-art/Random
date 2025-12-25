@@ -83,10 +83,10 @@ function HomeContent() {
         setNotificationsEnabled(notifEnabled);
 
         // Mostrar banner de novedades la primera vez (no bloqueante)
-        const hasVisited = localStorage.getItem('visited_v2_2');
+        const hasVisited = localStorage.getItem('visited_v2_3');
         if (!hasVisited) {
             setShowWhatsNewBanner(true);
-            localStorage.setItem('visited_v2_2', 'true');
+            localStorage.setItem('visited_v2_3', 'true');
         }
 
         // Cargar desde caché local primero (más rápido)
@@ -1054,7 +1054,7 @@ function HomeContent() {
     return (
         <>
             <Head>
-                <title>Cementerio de Secretos v2.2 - Comparte tus secretos anónimamente</title>
+                <title>Cementerio de Secretos v2.3 - Comparte tus secretos anónimamente</title>
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
                 <meta name="description" content="Comparte tus secretos, confesiones y pensamientos más profundos de forma completamente anónima. Diseño profesional rediseñado v2.1" />
             </Head>
@@ -1759,7 +1759,7 @@ function HomeContent() {
                                                             <div className="reply-actions">
                                                                 <button
                                                                     className="btn-reply"
-                                                                    onClick={() => setReplyingTo(secret.id)}
+                                                                    onClick={() => setReplyingTo(reply.id)}
                                                                 >
                                                                     ↩️ Responder
                                                                 </button>
@@ -1803,17 +1803,18 @@ function HomeContent() {
             {activeModal === 'whatsnew' && (
                 <div className="modal-overlay" onClick={() => setActiveModal(null)}>
                     <div className="modal-content glass">
-                        <h2>🚀 Novedades v2.2 - Feliz Navidad 🎄</h2>
+                        <h2>🚀 Novedades v2.3 - Feliz Navidad 🎄</h2>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-                            <div style={{ borderLeft: '3px solid #c41e3a', paddingLeft: '12px', background: 'linear-gradient(135deg, rgba(196, 30, 58, 0.1), rgba(255, 215, 0, 0.05))', padding: '12px', borderRadius: '8px' }}>
-                                <h3 style={{ color: '#c41e3a', fontSize: '14px', marginBottom: '5px' }}>🎄 Decoraciones Navideñas Activadas</h3>
-                                <ul style={{ fontSize: '13px', color: '#c41e3a', listStyle: 'none' }}>
-                                    <li>❄️ Efecto de nieve cayendo con múltiples capas</li>
-                                    <li>🎄 Árboles de navidad animados en el encabezado</li>
-                                    <li>✨ Luces navideñas parpadeantes y brillantes</li>
-                                    <li>🎁 Decoraciones festivas en tarjetas y elementos</li>
-                                    <li>🌟 Efectos visuales profesionales y elegantes</li>
-                                    <li>⚙️ Fácil de desactivar desde preferencias (próximamente)</li>
+                            <div style={{ borderLeft: '3px solid #00ff41', paddingLeft: '12px', background: 'linear-gradient(135deg, rgba(0, 255, 65, 0.1), rgba(0, 255, 65, 0.05))', padding: '12px', borderRadius: '8px' }}>
+                                <h3 style={{ color: '#00ff41', fontSize: '14px', marginBottom: '5px' }}>✨ v2.3 - UI/UX Completa para Móvil</h3>
+                                <ul style={{ fontSize: '13px', color: '#00ff41', listStyle: 'none' }}>
+                                    <li>📱 Responsivo perfecto en móviles (pantallas 320px+)</li>
+                                    <li>💅 Diseño optimizado con mejor espaciado y proporciones</li>
+                                    <li>🎨 Colores y contraste mejorados para móvil</li>
+                                    <li>⚡ Navegación táctil mejorada con botones más grandes</li>
+                                    <li>🌟 Cards y elementos redimensionados inteligentemente</li>
+                                    <li>📊 Grilla de secretos adaptativa y fluida</li>
+                                    <li>🎯 Mejor layout en tablets y pantallas grandes</li>
                                 </ul>
                             </div>
                             <div style={{ borderLeft: '3px solid #ff00ff', paddingLeft: '12px' }}>
