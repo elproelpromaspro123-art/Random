@@ -16,38 +16,40 @@ export default function handler(req) {
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          fontFamily: 'Arial, sans-serif',
+          fontFamily: 'system-ui, -apple-system, sans-serif',
           position: 'relative',
           overflow: 'hidden',
+          padding: '40px',
+          boxSizing: 'border-box',
         }}
       >
         {/* Decorative circles */}
         <div
           style={{
             position: 'absolute',
-            width: '300px',
-            height: '300px',
+            width: '280px',
+            height: '280px',
             backgroundColor: '#00ff41',
             borderRadius: '50%',
-            opacity: 0.1,
-            top: '50px',
-            left: '50px',
+            opacity: 0.08,
+            top: '30px',
+            left: '30px',
           }}
         />
         <div
           style={{
             position: 'absolute',
-            width: '400px',
-            height: '400px',
+            width: '320px',
+            height: '320px',
             backgroundColor: '#ff00ff',
             borderRadius: '50%',
-            opacity: 0.1,
-            bottom: '0px',
-            right: '0px',
+            opacity: 0.08,
+            bottom: '-50px',
+            right: '-50px',
           }}
         />
 
-        {/* Content */}
+        {/* Content wrapper */}
         <div
           style={{
             display: 'flex',
@@ -56,31 +58,35 @@ export default function handler(req) {
             justifyContent: 'center',
             zIndex: 1,
             textAlign: 'center',
+            width: '100%',
+            height: '100%',
           }}
         >
           {/* Coffin emoji */}
-          <div style={{ fontSize: '120px', marginBottom: '30px' }}>⚰️</div>
+          <div style={{ fontSize: '100px', marginBottom: '15px', lineHeight: '1' }}>⚰️</div>
 
           {/* Main title */}
           <h1
             style={{
-              fontSize: '80px',
+              fontSize: '66px',
               fontWeight: 'bold',
               color: '#ffffff',
-              margin: '0 0 20px 0',
-              letterSpacing: '2px',
+              margin: '0 0 10px 0',
+              letterSpacing: '1px',
+              lineHeight: '1.2',
             }}
           >
-            CEMENTERIO DE SECRETOS
+            CEMENTERIO DE<br />SECRETOS
           </h1>
 
           {/* Version and subtitle */}
           <h2
             style={{
-              fontSize: '48px',
+              fontSize: '42px',
               color: '#00ff41',
               fontWeight: '600',
-              margin: '0 0 30px 0',
+              margin: '10px 0 20px 0',
+              lineHeight: '1.2',
             }}
           >
             v2.3 - Comparte Anónimamente
@@ -89,27 +95,29 @@ export default function handler(req) {
           {/* Description */}
           <p
             style={{
-              fontSize: '36px',
+              fontSize: '32px',
               color: '#cccccc',
-              margin: '0 0 40px 0',
-              maxWidth: '800px',
+              margin: '0 0 25px 0',
+              maxWidth: '900px',
+              lineHeight: '1.3',
             }}
           >
             100% Privado • Respuestas • 7 Reacciones
           </p>
 
           {/* Icons line */}
-          <div style={{ fontSize: '56px', marginBottom: '40px', letterSpacing: '20px' }}>
+          <div style={{ fontSize: '48px', marginBottom: '25px', letterSpacing: '16px', lineHeight: '1' }}>
             🔒 💬 🔥 ❤️ 🎨 ⭐
           </div>
 
           {/* Bottom tagline */}
           <p
             style={{
-              fontSize: '28px',
+              fontSize: '24px',
               color: '#888888',
               margin: 0,
               fontStyle: 'italic',
+              lineHeight: '1.3',
             }}
           >
             Donde los secretos encuentran paz eterna
