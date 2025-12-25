@@ -67,8 +67,13 @@ function HomeContent() {
     const [reactionNotifications, setReactionNotifications] = useState({});
     const [lastSecretTime, setLastSecretTime] = useState(null);
     const [secretCooldownRemaining, setSecretCooldownRemaining] = useState(0);
+    const [disclaimerAccepted, setDisclaimerAccepted] = useState(false);
 
     useEffect(() => {
+        // Verificar si el disclaimer ya fue aceptado
+        const disclaimerAccepted = localStorage.getItem('disclaimer_accepted') === 'true';
+        setDisclaimerAccepted(disclaimerAccepted);
+
         const stored = localStorage.getItem('admin_token');
         if (stored) setToken(stored);
 
@@ -94,7 +99,7 @@ function HomeContent() {
         const cachedSecrets = localStorage.getItem('cached_secrets');
         const cachedReactions = localStorage.getItem('cached_reactions');
         const savedLastSecretTime = localStorage.getItem('lastSecretTime');
-        
+
         if (cachedSecrets) {
             try {
                 setSecrets(JSON.parse(cachedSecrets));
@@ -103,7 +108,7 @@ function HomeContent() {
                 console.error('Error cargando caché de secretos:', e);
             }
         }
-        
+
         if (cachedReactions) {
             try {
                 setMyReactions(JSON.parse(cachedReactions));
@@ -231,13 +236,13 @@ function HomeContent() {
             try {
                 const currentSecrets = secrets;
                 const serverSecrets = await fetchSecrets(searchQuery, selectedCategory, sortBy);
-                
+
                 // Validar que los contadores coincidan
                 const mismatches = currentSecrets.filter((secret) => {
                     const serverSecret = serverSecrets.find((s) => s.id === secret.id);
                     if (!serverSecret) return false;
-                    
-                    const hasCounterMismatch = 
+
+                    const hasCounterMismatch =
                         secret.fire_count !== serverSecret.fire_count ||
                         secret.heart_count !== serverSecret.heart_count ||
                         secret.laugh_count !== serverSecret.laugh_count ||
@@ -245,7 +250,7 @@ function HomeContent() {
                         secret.clap_count !== serverSecret.clap_count ||
                         secret.count_100 !== serverSecret.count_100 ||
                         secret.sad_count !== serverSecret.sad_count;
-                    
+
                     return hasCounterMismatch;
                 });
 
@@ -321,7 +326,7 @@ function HomeContent() {
 
         // Para trending, usar debounce de 500ms para evitar excesivas búsquedas
         const delay = newSort === 'trending' ? 500 : 0;
-        
+
         const timer = setTimeout(() => {
             fetchSecrets(searchQuery, selectedCategory, newSort);
             console.log(`📊 Búsqueda actualizada a sort: ${newSort}`);
@@ -482,50 +487,50 @@ function HomeContent() {
     };
 
     const handlePostSecret = async () => {
-         if (!newSecretContent.trim()) return;
+        if (!newSecretContent.trim()) return;
 
-         // Validar cooldown
-         if (lastSecretTime && secretCooldownRemaining > 0) {
-             alert(`⏱️ Espera ${secretCooldownRemaining}s antes de crear otro secreto`);
-             console.log(`⏱️ Cooldown activo: ${secretCooldownRemaining}s restantes`);
-             return;
-         }
+        // Validar cooldown
+        if (lastSecretTime && secretCooldownRemaining > 0) {
+            alert(`⏱️ Espera ${secretCooldownRemaining}s antes de crear otro secreto`);
+            console.log(`⏱️ Cooldown activo: ${secretCooldownRemaining}s restantes`);
+            return;
+        }
 
-         // Guardar valores ANTES de limpiar UI
-         const secretContent = newSecretContent;
-         const secretCategory = newSecretCategory;
-         const secretGender = newSecretGender || null;
-         const secretAge = newSecretAge ? parseInt(newSecretAge) : null;
-         const secretCountry = newSecretCountry || null;
+        // Guardar valores ANTES de limpiar UI
+        const secretContent = newSecretContent;
+        const secretCategory = newSecretCategory;
+        const secretGender = newSecretGender || null;
+        const secretAge = newSecretAge ? parseInt(newSecretAge) : null;
+        const secretCountry = newSecretCountry || null;
 
-         // Limpiar UI de una
-         setNewSecretContent('');
-         setNewSecretCategory('general');
-         setNewSecretGender('');
-         setNewSecretAge('');
-         setNewSecretCountry('');
-         setShowNewSecret(false);
+        // Limpiar UI de una
+        setNewSecretContent('');
+        setNewSecretCategory('general');
+        setNewSecretGender('');
+        setNewSecretAge('');
+        setNewSecretCountry('');
+        setShowNewSecret(false);
 
-         // Activar cooldown
-         const now = Date.now();
-         setLastSecretTime(now);
-         setSecretCooldownRemaining(Math.ceil(SECRET_COOLDOWN / 1000));
-         console.log('⚡ Secreto creado, cooldown activado: 2 minutos');
+        // Activar cooldown
+        const now = Date.now();
+        setLastSecretTime(now);
+        setSecretCooldownRemaining(Math.ceil(SECRET_COOLDOWN / 1000));
+        console.log('⚡ Secreto creado, cooldown activado: 2 minutos');
 
-         // Guardar en localStorage para persistencia
-         localStorage.setItem('lastSecretTime', now.toString());
+        // Guardar en localStorage para persistencia
+        localStorage.setItem('lastSecretTime', now.toString());
 
-         // Enviar al servidor en background
-         const headers = { 'Content-Type': 'application/json' };
-         if (token) headers['Authorization'] = `Bearer ${token}`;
+        // Enviar al servidor en background
+        const headers = { 'Content-Type': 'application/json' };
+        if (token) headers['Authorization'] = `Bearer ${token}`;
 
-         const body = {
-             content: secretContent,
-             category: secretCategory,
-             gender: secretGender,
-             age: secretAge,
-             country: secretCountry
-         };
+        const body = {
+            content: secretContent,
+            category: secretCategory,
+            gender: secretGender,
+            age: secretAge,
+            country: secretCountry
+        };
 
         fetch('/api/secrets', {
             method: 'POST',
@@ -805,120 +810,120 @@ function HomeContent() {
     };
 
     const handleReaction = async (secretId, type) => {
-       const reactionKey = `${secretId}_${type}`;
-       const now = Date.now();
-       const lastTime = lastReactionTime[reactionKey] || 0;
+        const reactionKey = `${secretId}_${type}`;
+        const now = Date.now();
+        const lastTime = lastReactionTime[reactionKey] || 0;
 
-       // Rate limiting: máx 1 reacción por segundo
-       if (now - lastTime < REACTION_RATE_LIMIT) {
-           console.log('⏱️ Rate limit: espera antes de reaccionar de nuevo');
-           return;
-       }
+        // Rate limiting: máx 1 reacción por segundo
+        if (now - lastTime < REACTION_RATE_LIMIT) {
+            console.log('⏱️ Rate limit: espera antes de reaccionar de nuevo');
+            return;
+        }
 
-       // Actualizar último tiempo de reacción
-       setLastReactionTime((prev) => ({ ...prev, [reactionKey]: now }));
-       
-       // Mapeo de tipos de reacción a nombres de campos en la BD
-       const countKeyMap = {
-           'fire': 'fire_count',
-           'heart': 'heart_count',
-           'laugh': 'laugh_count',
-           'wow': 'wow_count',
-           'clap': 'clap_count',
-           '100': 'count_100',
-           'sad': 'sad_count'
-       };
-       const countKey = countKeyMap[type];
+        // Actualizar último tiempo de reacción
+        setLastReactionTime((prev) => ({ ...prev, [reactionKey]: now }));
 
-       // Guardar estado anterior para rollback en caso de error
-       const previousMyReactions = { ...myReactions };
-       const previousSecrets = JSON.parse(JSON.stringify(secrets));
-       const wasReacted = !!myReactions[reactionKey];
+        // Mapeo de tipos de reacción a nombres de campos en la BD
+        const countKeyMap = {
+            'fire': 'fire_count',
+            'heart': 'heart_count',
+            'laugh': 'laugh_count',
+            'wow': 'wow_count',
+            'clap': 'clap_count',
+            '100': 'count_100',
+            'sad': 'sad_count'
+        };
+        const countKey = countKeyMap[type];
 
-       // Actualización optimista INMEDIATA (sin await, sin demoras)
-       const newMyReactions = { ...previousMyReactions };
-       if (wasReacted) {
-           delete newMyReactions[reactionKey];
-       } else {
-           newMyReactions[reactionKey] = true;
-       }
-       
-       const newSecrets = previousSecrets.map((secret) => {
-           if (secret.id === secretId) {
-               const currentCount = parseInt(secret[countKey]) || 0;
-               const newCount = wasReacted ? Math.max(currentCount - 1, 0) : currentCount + 1;
-               return { 
-                   ...secret, 
-                   [countKey]: newCount
-               };
-           }
-           return secret;
-       });
+        // Guardar estado anterior para rollback en caso de error
+        const previousMyReactions = { ...myReactions };
+        const previousSecrets = JSON.parse(JSON.stringify(secrets));
+        const wasReacted = !!myReactions[reactionKey];
 
-       // Agregar animación a reacción
-       setAnimatingReactions((prev) => ({ ...prev, [reactionKey]: true }));
-       setTimeout(() => {
-           setAnimatingReactions((prev) => {
-               const newState = { ...prev };
-               delete newState[reactionKey];
-               return newState;
-           });
-       }, 600);
+        // Actualización optimista INMEDIATA (sin await, sin demoras)
+        const newMyReactions = { ...previousMyReactions };
+        if (wasReacted) {
+            delete newMyReactions[reactionKey];
+        } else {
+            newMyReactions[reactionKey] = true;
+        }
 
-       // Actualizar UI DE UNA (sin batch, sincronamente)
-       setMyReactions(newMyReactions);
-       setSecrets(newSecrets);
-       console.log(`⚡ UI actualizada de una para reacción ${type} en secreto ${secretId}`);
+        const newSecrets = previousSecrets.map((secret) => {
+            if (secret.id === secretId) {
+                const currentCount = parseInt(secret[countKey]) || 0;
+                const newCount = wasReacted ? Math.max(currentCount - 1, 0) : currentCount + 1;
+                return {
+                    ...secret,
+                    [countKey]: newCount
+                };
+            }
+            return secret;
+        });
 
-       // Enviar al servidor en background (no bloquea UI)
-       fetch('/api/interactions', {
-           method: 'POST',
-           headers: { 'Content-Type': 'application/json' },
-           body: JSON.stringify({ action: 'react', secretId, reactionType: type }),
-       })
-           .then(async (res) => {
-               if (res.status === 429) {
-                   // Rate limit hit
-                   console.warn('⏱️ Rate limit: espera antes de reaccionar de nuevo');
-                   setMyReactions(previousMyReactions);
-                   setSecrets(previousSecrets);
-                   return;
-               }
+        // Agregar animación a reacción
+        setAnimatingReactions((prev) => ({ ...prev, [reactionKey]: true }));
+        setTimeout(() => {
+            setAnimatingReactions((prev) => {
+                const newState = { ...prev };
+                delete newState[reactionKey];
+                return newState;
+            });
+        }, 600);
 
-               if (!res.ok) {
-                   throw new Error(`HTTP ${res.status}`);
-               }
+        // Actualizar UI DE UNA (sin batch, sincronamente)
+        setMyReactions(newMyReactions);
+        setSecrets(newSecrets);
+        console.log(`⚡ UI actualizada de una para reacción ${type} en secreto ${secretId}`);
 
-               const data = await res.json();
-               console.log(`✓ Servidor confirmó reacción ${type}:`, data.message);
-               
-               // Mostrar notificación cuando se agrega una reacción
-               if (data.added && !wasReacted && viewerId) {
-                   setReactionNotifications((prev) => ({
-                       ...prev,
-                       [secretId]: { type, count: 1, time: Date.now() }
-                   }));
-                   setTimeout(() => {
-                       setReactionNotifications((prev) => {
-                           const newState = { ...prev };
-                           delete newState[secretId];
-                           return newState;
-                       });
-                   }, 3000);
-               }
-           })
-           .catch((error) => {
-               console.error('❌ Error en reacción, revirtiendo:', error);
-               // Si falla, revertir cambios
-               setMyReactions(previousMyReactions);
-               setSecrets(previousSecrets);
-               
-               // Resincronizar con el servidor
-               setTimeout(() => {
-                   fetchMyReactions();
-                   fetchSecrets();
-               }, 300);
-           });
+        // Enviar al servidor en background (no bloquea UI)
+        fetch('/api/interactions', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'react', secretId, reactionType: type }),
+        })
+            .then(async (res) => {
+                if (res.status === 429) {
+                    // Rate limit hit
+                    console.warn('⏱️ Rate limit: espera antes de reaccionar de nuevo');
+                    setMyReactions(previousMyReactions);
+                    setSecrets(previousSecrets);
+                    return;
+                }
+
+                if (!res.ok) {
+                    throw new Error(`HTTP ${res.status}`);
+                }
+
+                const data = await res.json();
+                console.log(`✓ Servidor confirmó reacción ${type}:`, data.message);
+
+                // Mostrar notificación cuando se agrega una reacción
+                if (data.added && !wasReacted && viewerId) {
+                    setReactionNotifications((prev) => ({
+                        ...prev,
+                        [secretId]: { type, count: 1, time: Date.now() }
+                    }));
+                    setTimeout(() => {
+                        setReactionNotifications((prev) => {
+                            const newState = { ...prev };
+                            delete newState[secretId];
+                            return newState;
+                        });
+                    }, 3000);
+                }
+            })
+            .catch((error) => {
+                console.error('❌ Error en reacción, revirtiendo:', error);
+                // Si falla, revertir cambios
+                setMyReactions(previousMyReactions);
+                setSecrets(previousSecrets);
+
+                // Resincronizar con el servidor
+                setTimeout(() => {
+                    fetchMyReactions();
+                    fetchSecrets();
+                }, 300);
+            });
     };
 
     const handleDeleteSecret = async (secretId) => {
@@ -1007,7 +1012,7 @@ function HomeContent() {
                 // Resincronizar
                 setTimeout(() => fetchSecrets(), 300);
             });
-            };
+    };
 
     const handleLogout = () => {
         localStorage.removeItem('admin_token');
@@ -1031,17 +1036,17 @@ function HomeContent() {
                 method: 'POST',
                 headers,
                 body: JSON.stringify({
-                     content: fakeSecretContent,
-                     category: fakeSecretCategory,
-                     created_at: new Date(dateTime).toISOString(),
-                     fireCount: parseInt(fakeSecretFireCount) || 0,
-                     heartCount: parseInt(fakeSecretHeartCount) || 0,
-                     laughCount: parseInt(fakeSecretLaughCount) || 0,
-                     wowCount: parseInt(fakeSecretWowCount) || 0,
-                     clapCount: parseInt(fakeSecretClapCount) || 0,
-                     count100: parseInt(fakeSecret100Count) || 0,
-                     sadCount: parseInt(fakeSecretSadCount) || 0
-                 })
+                    content: fakeSecretContent,
+                    category: fakeSecretCategory,
+                    created_at: new Date(dateTime).toISOString(),
+                    fireCount: parseInt(fakeSecretFireCount) || 0,
+                    heartCount: parseInt(fakeSecretHeartCount) || 0,
+                    laughCount: parseInt(fakeSecretLaughCount) || 0,
+                    wowCount: parseInt(fakeSecretWowCount) || 0,
+                    clapCount: parseInt(fakeSecretClapCount) || 0,
+                    count100: parseInt(fakeSecret100Count) || 0,
+                    sadCount: parseInt(fakeSecretSadCount) || 0
+                })
             });
 
             if (res.ok) {
@@ -1075,6 +1080,72 @@ function HomeContent() {
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
                 <meta name="description" content="Comparte tus secretos, confesiones y pensamientos más profundos de forma completamente anónima. Diseño profesional rediseñado v2.1" />
             </Head>
+
+            {!disclaimerAccepted && (
+                <div className="modal-overlay" style={{ zIndex: 10000, backdropFilter: 'blur(4px)' }}>
+                    <div className="modal-content glass" style={{ maxWidth: '500px', boxShadow: '0 20px 60px rgba(0,0,0,0.4)', borderRadius: '16px' }} onClick={(e) => e.stopPropagation()}>
+                        <div style={{ textAlign: 'center', marginBottom: '20px' }}>
+                            <div style={{ fontSize: '48px', marginBottom: '10px' }}>⚠️</div>
+                            <h2 style={{ marginBottom: '10px' }}>Aviso Importante</h2>
+                        </div>
+
+                        <div style={{
+                            background: 'linear-gradient(135deg, rgba(255, 152, 0, 0.12), rgba(255, 107, 0, 0.08))',
+                            border: '1px solid rgba(255, 152, 0, 0.3)',
+                            borderRadius: '10px',
+                            padding: '16px',
+                            marginBottom: '20px',
+                            lineHeight: '1.6',
+                            fontSize: '14px',
+                            color: 'var(--text-primary)',
+                            textAlign: 'justify'
+                        }}>
+                            <p style={{ marginBottom: '12px' }}>
+                                <strong>Antes de continuar, queremos hacerte saber que:</strong>
+                            </p>
+                            <p style={{ marginBottom: '12px' }}>
+                                Esta es una plataforma de <strong>libre albedrío</strong> donde los usuarios pueden compartir sus secretos y confesiones de forma anónima. Debido a la naturaleza de estos contenidos, <strong>puede haber material sensible o que ofenda a ciertas personas</strong>.
+                            </p>
+                            <p>
+                                Aunque intentamos <strong>moderar activamente</strong> y mantener ciertos estándares éticos, no podemos garantizar que todo el contenido sea apropiado para todas las audiencias. Al continuar, aceptas esta responsabilidad.
+                            </p>
+                        </div>
+
+                        <div style={{
+                            background: 'linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.05))',
+                            border: '1px solid rgba(102, 126, 234, 0.3)',
+                            borderRadius: '10px',
+                            padding: '12px',
+                            marginBottom: '20px',
+                            fontSize: '12px',
+                            color: '#667eea',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '8px'
+                        }}>
+                            <span>💡</span>
+                            <span>Si prefieres no ver ciertos tipos de contenido, puedes filtrar por categorías más adelante</span>
+                        </div>
+
+                        <div style={{
+                            display: 'grid',
+                            gridTemplateColumns: '1fr 1fr',
+                            gap: '10px'
+                        }}>
+                            <button
+                                className="btn-post glow-green"
+                                onClick={() => {
+                                    localStorage.setItem('disclaimer_accepted', 'true');
+                                    setDisclaimerAccepted(true);
+                                }}
+                                style={{ gridColumn: '1 / -1' }}
+                            >
+                                ✓ Entiendo y quiero continuar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             <div className="container">
                 <header className="header">
@@ -1496,14 +1567,14 @@ function HomeContent() {
                                 className="textarea-input"
                             />
                             <div className="modal-actions">
-                                <button 
+                                <button
                                     className={`btn-post glow-green ${secretCooldownRemaining > 0 ? 'disabled' : ''}`}
                                     onClick={handlePostSecret}
                                     disabled={secretCooldownRemaining > 0}
                                     title={secretCooldownRemaining > 0 ? `Espera ${secretCooldownRemaining}s` : 'Publicar secreto'}
                                 >
-                                    {secretCooldownRemaining > 0 
-                                        ? `⏱️ ${secretCooldownRemaining}s` 
+                                    {secretCooldownRemaining > 0
+                                        ? `⏱️ ${secretCooldownRemaining}s`
                                         : 'Publicar'
                                     }
                                 </button>
@@ -1584,99 +1655,99 @@ function HomeContent() {
                                     </div>
 
                                     <div className="secret-actions">
-                                         <button
-                                              className={`btn-reaction ${myReactions[`${secret.id}_fire`] ? 'reacted' : ''} ${animatingReactions[`${secret.id}_fire`] ? 'animating' : ''}`}
-                                              onClick={() => handleReaction(secret.id, 'fire')}
-                                              title="¡Muy caliente!"
-                                              style={myReactions[`${secret.id}_fire`] ? {
-                                                  borderColor: '#ff6b00',
-                                                  color: '#ff6b00',
-                                                  backgroundColor: 'rgba(255, 107, 0, 0.2)'
-                                              } : {}}
-                                          >
-                                              🔥 {secret.fire_count || 0}
-                                          </button>
-                                         <button
-                                             className={`btn-reaction ${myReactions[`${secret.id}_heart`] ? 'reacted' : ''} ${animatingReactions[`${secret.id}_heart`] ? 'animating' : ''}`}
-                                             onClick={() => handleReaction(secret.id, 'heart')}
-                                             title="Me encanta"
-                                             style={myReactions[`${secret.id}_heart`] ? {
-                                                 borderColor: '#ff1744',
-                                                 color: '#ff1744',
-                                                 backgroundColor: 'rgba(255, 23, 68, 0.2)'
-                                             } : {}}
-                                         >
-                                             ❤️ {secret.heart_count || 0}
-                                         </button>
-                                         <button
-                                             className={`btn-reaction ${myReactions[`${secret.id}_laugh`] ? 'reacted' : ''} ${animatingReactions[`${secret.id}_laugh`] ? 'animating' : ''}`}
-                                             onClick={() => handleReaction(secret.id, 'laugh')}
-                                             title="¡Jajaja!"
-                                             style={myReactions[`${secret.id}_laugh`] ? {
-                                                 borderColor: '#ffd700',
-                                                 color: '#ffd700',
-                                                 backgroundColor: 'rgba(255, 215, 0, 0.2)'
-                                             } : {}}
-                                         >
-                                             😂 {secret.laugh_count || 0}
-                                         </button>
-                                         <button
-                                             className={`btn-reaction ${myReactions[`${secret.id}_wow`] ? 'reacted' : ''} ${animatingReactions[`${secret.id}_wow`] ? 'animating' : ''}`}
-                                             onClick={() => handleReaction(secret.id, 'wow')}
-                                             title="¡Wow!"
-                                             style={myReactions[`${secret.id}_wow`] ? {
-                                                 borderColor: '#00bfff',
-                                                 color: '#00bfff',
-                                                 backgroundColor: 'rgba(0, 191, 255, 0.2)'
-                                             } : {}}
-                                         >
-                                             😮 {secret.wow_count || 0}
-                                         </button>
-                                         <button
-                                             className={`btn-reaction ${myReactions[`${secret.id}_clap`] ? 'reacted' : ''} ${animatingReactions[`${secret.id}_clap`] ? 'animating' : ''}`}
-                                             onClick={() => handleReaction(secret.id, 'clap')}
-                                             title="¡Bravo!"
-                                             style={myReactions[`${secret.id}_clap`] ? {
-                                                 borderColor: '#00ff41',
-                                                 color: '#00ff41',
-                                                 backgroundColor: 'rgba(0, 255, 65, 0.2)'
-                                             } : {}}
-                                         >
-                                             👏 {secret.clap_count || 0}
-                                         </button>
-                                         <button
-                                             className={`btn-reaction ${myReactions[`${secret.id}_100`] ? 'reacted' : ''} ${animatingReactions[`${secret.id}_100`] ? 'animating' : ''}`}
-                                             onClick={() => handleReaction(secret.id, '100')}
-                                             title="¡100!"
-                                             style={myReactions[`${secret.id}_100`] ? {
-                                                 borderColor: '#ff00ff',
-                                                 color: '#ff00ff',
-                                                 backgroundColor: 'rgba(255, 0, 255, 0.2)'
-                                             } : {}}
-                                         >
-                                             💯 {secret.count_100 || 0}
-                                         </button>
-                                         <button
-                                             className={`btn-reaction ${myReactions[`${secret.id}_sad`] ? 'reacted' : ''} ${animatingReactions[`${secret.id}_sad`] ? 'animating' : ''}`}
-                                             onClick={() => handleReaction(secret.id, 'sad')}
-                                             title="Triste"
-                                             style={myReactions[`${secret.id}_sad`] ? {
-                                                 borderColor: '#e91e63',
-                                                 color: '#e91e63',
-                                                 backgroundColor: 'rgba(233, 30, 99, 0.2)'
-                                             } : {}}
-                                         >
-                                             😢 {secret.sad_count || 0}
-                                         </button>
-                                         <button
-                                             className="btn-reply"
-                                             onClick={() => {
-                                                 setReplyingTo(secret.id);
-                                                 setReplyingToSecretId(secret.id);
-                                             }}
-                                         >
-                                             💬 Responder
-                                         </button>
+                                        <button
+                                            className={`btn-reaction ${myReactions[`${secret.id}_fire`] ? 'reacted' : ''} ${animatingReactions[`${secret.id}_fire`] ? 'animating' : ''}`}
+                                            onClick={() => handleReaction(secret.id, 'fire')}
+                                            title="¡Muy caliente!"
+                                            style={myReactions[`${secret.id}_fire`] ? {
+                                                borderColor: '#ff6b00',
+                                                color: '#ff6b00',
+                                                backgroundColor: 'rgba(255, 107, 0, 0.2)'
+                                            } : {}}
+                                        >
+                                            🔥 {secret.fire_count || 0}
+                                        </button>
+                                        <button
+                                            className={`btn-reaction ${myReactions[`${secret.id}_heart`] ? 'reacted' : ''} ${animatingReactions[`${secret.id}_heart`] ? 'animating' : ''}`}
+                                            onClick={() => handleReaction(secret.id, 'heart')}
+                                            title="Me encanta"
+                                            style={myReactions[`${secret.id}_heart`] ? {
+                                                borderColor: '#ff1744',
+                                                color: '#ff1744',
+                                                backgroundColor: 'rgba(255, 23, 68, 0.2)'
+                                            } : {}}
+                                        >
+                                            ❤️ {secret.heart_count || 0}
+                                        </button>
+                                        <button
+                                            className={`btn-reaction ${myReactions[`${secret.id}_laugh`] ? 'reacted' : ''} ${animatingReactions[`${secret.id}_laugh`] ? 'animating' : ''}`}
+                                            onClick={() => handleReaction(secret.id, 'laugh')}
+                                            title="¡Jajaja!"
+                                            style={myReactions[`${secret.id}_laugh`] ? {
+                                                borderColor: '#ffd700',
+                                                color: '#ffd700',
+                                                backgroundColor: 'rgba(255, 215, 0, 0.2)'
+                                            } : {}}
+                                        >
+                                            😂 {secret.laugh_count || 0}
+                                        </button>
+                                        <button
+                                            className={`btn-reaction ${myReactions[`${secret.id}_wow`] ? 'reacted' : ''} ${animatingReactions[`${secret.id}_wow`] ? 'animating' : ''}`}
+                                            onClick={() => handleReaction(secret.id, 'wow')}
+                                            title="¡Wow!"
+                                            style={myReactions[`${secret.id}_wow`] ? {
+                                                borderColor: '#00bfff',
+                                                color: '#00bfff',
+                                                backgroundColor: 'rgba(0, 191, 255, 0.2)'
+                                            } : {}}
+                                        >
+                                            😮 {secret.wow_count || 0}
+                                        </button>
+                                        <button
+                                            className={`btn-reaction ${myReactions[`${secret.id}_clap`] ? 'reacted' : ''} ${animatingReactions[`${secret.id}_clap`] ? 'animating' : ''}`}
+                                            onClick={() => handleReaction(secret.id, 'clap')}
+                                            title="¡Bravo!"
+                                            style={myReactions[`${secret.id}_clap`] ? {
+                                                borderColor: '#00ff41',
+                                                color: '#00ff41',
+                                                backgroundColor: 'rgba(0, 255, 65, 0.2)'
+                                            } : {}}
+                                        >
+                                            👏 {secret.clap_count || 0}
+                                        </button>
+                                        <button
+                                            className={`btn-reaction ${myReactions[`${secret.id}_100`] ? 'reacted' : ''} ${animatingReactions[`${secret.id}_100`] ? 'animating' : ''}`}
+                                            onClick={() => handleReaction(secret.id, '100')}
+                                            title="¡100!"
+                                            style={myReactions[`${secret.id}_100`] ? {
+                                                borderColor: '#ff00ff',
+                                                color: '#ff00ff',
+                                                backgroundColor: 'rgba(255, 0, 255, 0.2)'
+                                            } : {}}
+                                        >
+                                            💯 {secret.count_100 || 0}
+                                        </button>
+                                        <button
+                                            className={`btn-reaction ${myReactions[`${secret.id}_sad`] ? 'reacted' : ''} ${animatingReactions[`${secret.id}_sad`] ? 'animating' : ''}`}
+                                            onClick={() => handleReaction(secret.id, 'sad')}
+                                            title="Triste"
+                                            style={myReactions[`${secret.id}_sad`] ? {
+                                                borderColor: '#e91e63',
+                                                color: '#e91e63',
+                                                backgroundColor: 'rgba(233, 30, 99, 0.2)'
+                                            } : {}}
+                                        >
+                                            😢 {secret.sad_count || 0}
+                                        </button>
+                                        <button
+                                            className="btn-reply"
+                                            onClick={() => {
+                                                setReplyingTo(secret.id);
+                                                setReplyingToSecretId(secret.id);
+                                            }}
+                                        >
+                                            💬 Responder
+                                        </button>
                                         <button
                                             className="btn-action-small"
                                             style={{ borderColor: '#00ff41', color: '#00ff41' }}
@@ -1778,15 +1849,15 @@ function HomeContent() {
                                                                 dangerouslySetInnerHTML={{ __html: reply.content }}
                                                             ></p>
                                                             <div className="reply-actions">
-                                                                 <button
-                                                                     className="btn-reply"
-                                                                     onClick={() => {
-                                                                         setReplyingTo(reply.id);
-                                                                         setReplyingToSecretId(secret.id);
-                                                                     }}
-                                                                 >
-                                                                     ↩️ Responder
-                                                                 </button>
+                                                                <button
+                                                                    className="btn-reply"
+                                                                    onClick={() => {
+                                                                        setReplyingTo(reply.id);
+                                                                        setReplyingToSecretId(secret.id);
+                                                                    }}
+                                                                >
+                                                                    ↩️ Responder
+                                                                </button>
                                                                 {token && (
                                                                     <button
                                                                         className="btn-danger-small"

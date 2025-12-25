@@ -30,26 +30,40 @@ export default async function handler(req, res) {
     }
 
     if (req.method === 'POST') {
-        try {
-            const { content, parentId = null, category = 'general', gender = null, age = null, country = null, creatorViewerId = null } = req.body;
+         try {
+             const { content, parentId = null, category = 'general', gender = null, age = null, country = null, creatorViewerId = null } = req.body;
 
-            if (!content || content.trim().length === 0) {
-                return res.status(400).json({ error: 'Content is required' });
-            }
+             if (!content || content.trim().length === 0) {
+                 return res.status(400).json({ error: 'Content is required' });
+             }
 
-            const sanitized = sanitizeContent(content);
-            const isSuspicious = checkSuspiciousContent(sanitized);
-            const token = req.headers.authorization?.split(' ')[1];
-            const isAdminPost = verifyToken(token) !== null;
+             // Validar categoría contra whitelist
+             const validCategories = ['general', 'confesiones', 'consejos', 'historias', 'preguntas'];
+             const validCategory = validCategories.includes(category) ? category : 'general';
 
-            console.log('Creating secret with:', { category, gender, age, country, creatorViewerId });
+             // Validar y limitar género
+             const validGenders = ['masculino', 'femenino', 'otro', ''];
+             const validGender = gender && validGenders.includes(gender.toLowerCase()) ? gender : null;
 
-            const result = await query(
-                `INSERT INTO secrets (content, parent_id, creator_viewer_id, is_suspicious, is_admin_post, category, user_gender, user_age, user_country, created_at)
-         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, NOW())
-         RETURNING id, content, parent_id, creator_viewer_id, is_pinned, is_suspicious, is_admin_post, category, user_gender, user_age, user_country, created_at`,
-                [sanitized, parentId, creatorViewerId, isSuspicious, isAdminPost, category, gender, age, country]
-            );
+             // Validar y limitar edad (si se proporciona debe ser número entre 13 y 120)
+             const validAge = age && !isNaN(age) && age >= 13 && age <= 120 ? parseInt(age) : null;
+
+             // Validar y limitar país (máximo 100 caracteres)
+             const validCountry = country && typeof country === 'string' && country.trim().length > 0 ? country.trim().substring(0, 100) : null;
+
+             const sanitized = sanitizeContent(content);
+             const isSuspicious = checkSuspiciousContent(sanitized);
+             const token = req.headers.authorization?.split(' ')[1];
+             const isAdminPost = verifyToken(token) !== null;
+
+             console.log('Creating secret with:', { validCategory, validGender, validAge, validCountry, creatorViewerId });
+
+             const result = await query(
+                 `INSERT INTO secrets (content, parent_id, creator_viewer_id, is_suspicious, is_admin_post, category, user_gender, user_age, user_country, created_at)
+             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, NOW())
+             RETURNING id, content, parent_id, creator_viewer_id, is_pinned, is_suspicious, is_admin_post, category, user_gender, user_age, user_country, created_at`,
+                 [sanitized, parentId, creatorViewerId, isSuspicious, isAdminPost, validCategory, validGender, validAge, validCountry]
+             );
 
             console.log('Secret created:', result.rows[0]);
 

@@ -34,13 +34,17 @@ export default async function handler(req, res) {
         WHERE s.parent_id IS NULL
         `;
 
+        // Validar sort parameter para prevenir SQL injection
         let orderBy = 's.is_pinned DESC, s.created_at DESC';
-        if (sort === 'trending') {
-            orderBy = 's.is_pinned DESC, (s.view_count + COALESCE(fire_reactions.count, 0) + COALESCE(heart_reactions.count, 0) + COALESCE(reply_count.count, 0)) DESC';
-        } else if (sort === 'reactions') {
-            orderBy = 's.is_pinned DESC, (COALESCE(fire_reactions.count, 0) + COALESCE(heart_reactions.count, 0)) DESC';
-        } else if (sort === 'replies') {
-            orderBy = 's.is_pinned DESC, COALESCE(reply_count.count, 0) DESC';
+        const validSortOptions = ['recent', 'trending', 'reactions', 'replies'];
+        if (validSortOptions.includes(sort)) {
+            if (sort === 'trending') {
+                orderBy = 's.is_pinned DESC, (s.view_count + COALESCE(fire_reactions.count, 0) + COALESCE(heart_reactions.count, 0) + COALESCE(reply_count.count, 0)) DESC';
+            } else if (sort === 'reactions') {
+                orderBy = 's.is_pinned DESC, (COALESCE(fire_reactions.count, 0) + COALESCE(heart_reactions.count, 0)) DESC';
+            } else if (sort === 'replies') {
+                orderBy = 's.is_pinned DESC, COALESCE(reply_count.count, 0) DESC';
+            }
         }
 
         const params = [];

@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS secrets (
 CREATE TABLE IF NOT EXISTS reactions (
   id SERIAL PRIMARY KEY,
   secret_id INTEGER NOT NULL REFERENCES secrets(id) ON DELETE CASCADE,
-  type VARCHAR(10) NOT NULL CHECK (type IN ('fire', 'heart')),
+  type VARCHAR(10) NOT NULL CHECK (type IN ('fire', 'heart', 'laugh', 'wow', 'clap', '100', 'sad')),
   user_ip VARCHAR(45),
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   UNIQUE(secret_id, type, user_ip)
@@ -42,3 +42,6 @@ CREATE INDEX IF NOT EXISTS idx_secrets_user_gender ON secrets(user_gender);
 CREATE INDEX IF NOT EXISTS idx_secrets_user_country ON secrets(user_country);
 CREATE INDEX IF NOT EXISTS idx_secrets_creator_viewer_id ON secrets(creator_viewer_id);
 CREATE INDEX IF NOT EXISTS idx_reports_secret_id ON reports(secret_id);
+CREATE INDEX IF NOT EXISTS idx_reactions_type ON reactions(type);
+CREATE INDEX IF NOT EXISTS idx_reactions_secret_type ON reactions(secret_id, type);
+CREATE INDEX IF NOT EXISTS idx_reactions_user_ip ON reactions(user_ip);

@@ -93,9 +93,16 @@ export default async function handler(req, res) {
             }
 
             if (action === 'report') {
+                // Validar que reason no esté vacío y tenga límite de longitud
+                if (!reason || typeof reason !== 'string' || reason.trim().length === 0) {
+                    return res.status(400).json({ error: 'Report reason is required' });
+                }
+                
+                const trimmedReason = reason.trim().substring(0, 1000); // Limitar a 1000 caracteres
+                
                 await query(
                     `INSERT INTO reports (secret_id, reason, created_at) VALUES ($1, $2, NOW())`,
-                    [secretId, reason]
+                    [secretId, trimmedReason]
                 );
                 return res.status(201).json({ message: 'Report submitted' });
             }

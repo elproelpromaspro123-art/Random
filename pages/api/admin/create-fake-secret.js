@@ -24,6 +24,10 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Date and time are required' });
     }
 
+    // Validar categoría contra whitelist
+    const validCategories = ['general', 'confesiones', 'consejos', 'historias', 'preguntas'];
+    const validCategory = validCategories.includes(category) ? category : 'general';
+
     // Validar que la fecha sea válida
     const dateObj = new Date(created_at);
     if (isNaN(dateObj.getTime())) {
@@ -37,7 +41,7 @@ export default async function handler(req, res) {
                  (SELECT COUNT(*) FROM reactions WHERE secret_id = secrets.id AND type = 'fire') as fire_count,
                  (SELECT COUNT(*) FROM reactions WHERE secret_id = secrets.id AND type = 'heart') as heart_count,
                  (SELECT COUNT(*) FROM secrets WHERE parent_id = secrets.id) as reply_count`,
-      [content, category, created_at]
+      [content, validCategory, created_at]
     );
 
     const secretId = result.rows[0].id;
