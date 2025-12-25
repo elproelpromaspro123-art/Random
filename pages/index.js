@@ -24,6 +24,7 @@ function HomeContent() {
     const [reportContent, setReportContent] = useState('');
     const [reportRating, setReportRating] = useState(5);
     const [replyingTo, setReplyingTo] = useState(null);
+    const [replyingToSecretId, setReplyingToSecretId] = useState(null);
     const [replyContent, setReplyContent] = useState('');
     const [repliesVisible, setRepliesVisible] = useState({});
     const [highlightedId, setHighlightedId] = useState(null);
@@ -604,6 +605,7 @@ function HomeContent() {
         if (!replyContent.trim()) return;
 
         const parentId = replyingTo;
+        const secretId = replyingToSecretId || parentId;  // Usar el guardado o asumir que es el secreto principal
         const replyText = replyContent;
 
         // Actualizar UI DE UNA (limpiar campos)
@@ -614,13 +616,14 @@ function HomeContent() {
 
         setReplyContent('');
         setReplyingTo(null);
+        setReplyingToSecretId(null);
 
         // Incrementar contador inmediatamente
         setReplyCount((prev) => ({
             ...prev,
-            [parentId]: (prev[parentId] || 0) + 1
+            [secretId]: (prev[secretId] || 0) + 1
         }));
-        console.log('⚡ Contador de respuestas actualizado de una para secreto', parentId);
+        console.log('⚡ Contador de respuestas actualizado para secreto', secretId);
 
         // Enviar al servidor en background
         const headers = { 'Content-Type': 'application/json' };
@@ -642,16 +645,23 @@ function HomeContent() {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
-                            secretId: parentId,
+                            secretId: secretId,
                             replyId: newReply.id,
                             viewerId: viewerId
                         })
                     }).catch(err => console.error('Error notificación:', err));
                 }
 
-                // Recargar las respuestas si están visibles
-                if (repliesVisible[parentId]) {
-                    fetchReplies(parentId);
+                // Actualizar respuestas en tiempo real
+                if (repliesVisible[secretId]) {
+                    // Añadir la nueva respuesta directamente a la lista visible
+                    setRepliesVisible((prev) => ({
+                        ...prev,
+                        [secretId]: [...(prev[secretId] || []), newReply]
+                    }));
+                } else {
+                    // Si no están visibles, cargarlas
+                    fetchReplies(secretId);
                 }
                 // Sincronizar lista de secretos
                 fetchSecrets();
@@ -661,7 +671,7 @@ function HomeContent() {
                 // Restaurar contador
                 setReplyCount((prev) => ({
                     ...prev,
-                    [parentId]: Math.max((prev[parentId] || 1) - 1, 0)
+                    [secretId]: Math.max((prev[secretId] || 1) - 1, 0)
                 }));
                 // Resincronizar
                 fetchSecrets();
@@ -1653,7 +1663,10 @@ function HomeContent() {
                                          </button>
                                          <button
                                              className="btn-reply"
-                                             onClick={() => setReplyingTo(secret.id)}
+                                             onClick={() => {
+                                                 setReplyingTo(secret.id);
+                                                 setReplyingToSecretId(secret.id);
+                                             }}
                                          >
                                              💬 Responder
                                          </button>
@@ -1722,6 +1735,7 @@ function HomeContent() {
                                                     className="btn-cancel"
                                                     onClick={() => {
                                                         setReplyingTo(null);
+                                                        setReplyingToSecretId(null);
                                                         setReplyContent('');
                                                     }}
                                                 >
@@ -1757,12 +1771,15 @@ function HomeContent() {
                                                                 dangerouslySetInnerHTML={{ __html: reply.content }}
                                                             ></p>
                                                             <div className="reply-actions">
-                                                                <button
-                                                                    className="btn-reply"
-                                                                    onClick={() => setReplyingTo(reply.id)}
-                                                                >
-                                                                    ↩️ Responder
-                                                                </button>
+                                                                 <button
+                                                                     className="btn-reply"
+                                                                     onClick={() => {
+                                                                         setReplyingTo(reply.id);
+                                                                         setReplyingToSecretId(secret.id);
+                                                                     }}
+                                                                 >
+                                                                     ↩️ Responder
+                                                                 </button>
                                                                 {token && (
                                                                     <button
                                                                         className="btn-danger-small"
