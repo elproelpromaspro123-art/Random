@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /admin/
+
+Sitemap: https://cementerio-de-secretos-y-confesiones.vercel.app/sitemap.xml
